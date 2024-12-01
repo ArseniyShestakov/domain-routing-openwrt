@@ -10,7 +10,8 @@ echo "Выпиливаем из crontab"
 sed -i '/getdomains start/d' /etc/crontabs/root
 
 echo "Выпиливаем домены"
-rm -f /tmp/dnsmasq.d/domains.lst
+
+rm -f /tmp/dnsmasq*d/domains.lst
 
 echo "Чистим firewall, раз раз 🍴"
 

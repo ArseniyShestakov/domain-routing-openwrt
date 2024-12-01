@@ -329,11 +329,11 @@ else
 fi
 
 # Chek xray package
-if apk list | grep -q xray-core; then
+if apk list --installed | grep -q xray-core; then
   checkpoint_false "$XRAY_CORE_PACKAGE_DETECTED"
 fi
 
-if apk list | grep -q luci-app-xray; then
+if apk list --installed | grep -q luci-app-xray; then
   checkpoint_false "$LUCI_APP_XRAY_PACKAGE_DETECTED"
 fi
 
@@ -401,7 +401,7 @@ if [ "$WG" == true ]; then
   fi
 fi
 
-if apk list | grep -q openvpn; then
+if apk list --installed | grep -q openvpn; then
   checkpoint_true "$OPENVPN_INSTALLED"
   OVPN=true
 fi
@@ -434,7 +434,7 @@ if [ "$OVPN" == true ]; then
   fi
 fi
 
-if apk list | grep -q sing-box; then
+if apk list --installed | grep -q sing-box; then
   checkpoint_true "$SINGBOX_INSTALLED"
 
   # Check route table
@@ -599,7 +599,7 @@ fi
 # DNS
 
 # DNSCrypt
-if apk list | grep -q dnscrypt-proxy2; then
+if apk list --installed | grep -q dnscrypt-proxy2; then
   checkpoint_true "$DNSCRYPT_INSTALLED"
   if service dnscrypt-proxy status | grep -q 'running'; then
     checkpoint_true "$DNSCRYPT_SERVICE_RUNNING"
@@ -617,7 +617,7 @@ if apk list | grep -q dnscrypt-proxy2; then
 fi
 
 # Stubby
-if apk list | grep -q stubby; then
+if apk list --installed | grep -q stubby; then
   checkpoint_true "$STUBBY_INSTALLED"
   if service stubby status | grep -q 'running'; then
     checkpoint_true "$STUBBY_SERVICE_RUNNING"
