@@ -321,7 +321,7 @@ dnsmasqfull() {
         printf "\033[32;1mInstalled dnsmasq-full\033[0m\n"
         apk --update-cache add dnsmasq-full
 
-        [ -f /etc/config/dhcp-opkg ] && cp /etc/config/dhcp /etc/config/dhcp-old && mv /etc/config/dhcp-opkg /etc/config/dhcp
+        [ -f /etc/config/dhcp.apk-new ] && cp /etc/config/dhcp /etc/config/dhcp-old && mv /etc/config/dhcp.apk-new /etc/config/dhcp
 fi
 }
 
