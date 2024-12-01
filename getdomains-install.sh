@@ -890,7 +890,7 @@ install_awg_packages() {
             exit 1
         fi
 
-        apk add "$AWG_DIR/$AMNEZIAWG_TOOLS_FILENAME"
+        apk add --allow-untrusted "$AWG_DIR/$AMNEZIAWG_TOOLS_FILENAME"
 
         if [ $? -eq 0 ]; then
             echo "amneziawg-tools file downloaded successfully"
@@ -914,7 +914,7 @@ install_awg_packages() {
             exit 1
         fi
 
-        apk add "$AWG_DIR/$KMOD_AMNEZIAWG_FILENAME"
+        apk add --allow-untrusted "$AWG_DIR/$KMOD_AMNEZIAWG_FILENAME"
 
         if [ $? -eq 0 ]; then
             echo "kmod-amneziawg file downloaded successfully"
@@ -938,7 +938,7 @@ install_awg_packages() {
             exit 1
         fi
 
-        apk add "$AWG_DIR/$LUCI_APP_AMNEZIAWG_FILENAME"
+        apk add --allow-untrusted "$AWG_DIR/$LUCI_APP_AMNEZIAWG_FILENAME"
 
         if [ $? -eq 0 ]; then
             echo "luci-app-amneziawg file downloaded successfully"
