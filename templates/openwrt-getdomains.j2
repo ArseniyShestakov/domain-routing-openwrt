@@ -21,10 +21,11 @@ start () {
     {% if ansible_distribution_major_version < "22" and country == "ukraine" %}
     DOMAINS=https://raw.githubusercontent.com/itdoginfo/allow-domains/main/Ukraine/inside-dnsmasq-ipset.lst
     {% endif %}
+    PATH_DNSMASQ=$(ls /tmp | grep dnsmasq)
     count=0
     while true; do
         if curl -m 3 github.com; then
-            curl -f $DOMAINS --output /tmp/dnsmasq.d/domains.lst
+            curl -f $DOMAINS --output /tmp/$PATH_DNSMASQ/domains.lst
             break
         else
             echo "GitHub is not available. Check the internet availability [$count]"
@@ -32,7 +33,7 @@ start () {
         fi
     done
 
-    if dnsmasq --conf-file=/tmp/dnsmasq.d/domains.lst --test 2>&1 | grep -q "syntax check OK"; then
+    if dnsmasq --conf-file=/tmp/$PATH_DNSMASQ/domains.lst --test 2>&1 | grep -q "syntax check OK"; then
         /etc/init.d/dnsmasq restart
     fi
 
@@ -56,7 +57,7 @@ start () {
             {% endif %}
             {% if list_community %}
             curl -f -z $dir/community.lst https://community.antifilter.download/list/community.lst --output $dir/community.lst
-            {% endif %}  
+            {% endif %}
             break
         else
             echo "antifilter.download is not available. Check the internet availability [$count]"
@@ -66,5 +67,5 @@ start () {
 
     echo "Firewall restart"
     /etc/init.d/firewall restart
-    {% endif %}  
+    {% endif %}
 }
