@@ -55,13 +55,13 @@ set_language_en() {
   UNSUPPORTED_OPENWRT="You are using OpenWrt $UNSUPPORTED_OPENWRT_VERSION. This check script does not support it."
   RAM_WARNING="Your router has less than $MIN_RAM MB of RAM. It is recommended to use only the vpn_domains list."
   CURL_INSTALLED="$CURL_PACKAGE $INSTALLED"
-  CURL_NOT_INSTALLED="$CURL_PACKAGE $NOT_INSTALLED. Install it: opkg install $CURL_PACKAGE"
+  CURL_NOT_INSTALLED="$CURL_PACKAGE $NOT_INSTALLED. Install it: apk add $CURL_PACKAGE"
   DNSMASQ_FULL_INSTALLED="$DNSMASQ_FULL_PACKAGE $INSTALLED"
   DNSMASQ_FULL_NOT_INSTALLED="$DNSMASQ_FULL_PACKAGE $NOT_INSTALLED"
-  DNSMASQ_FULL_DETAILS="If you don't use vpn_domains set, it's OK\nCheck version: opkg list-installed | grep $DNSMASQ_FULL_PACKAGE\nRequired version >= $DNSMASQ_FULL_REQUIRED_VERSION. For OpenWrt 22.03 follow manual: https://t.me/itdoginfo/12"
+  DNSMASQ_FULL_DETAILS="If you don't use vpn_domains set, it's OK\nCheck version: apk list | grep $DNSMASQ_FULL_PACKAGE\nRequired version >= $DNSMASQ_FULL_REQUIRED_VERSION. For OpenWrt 22.03 follow manual: https://t.me/itdoginfo/12"
   OPENWRT_21_DETAILS="\nYou are using OpenWrt $UNSUPPORTED_OPENWRT_VERSION. This check does not support it.\nManual for OpenWrt $UNSUPPORTED_OPENWRT_VERSION: https://t.me/itdoginfo/8"
   XRAY_CORE_PACKAGE_DETECTED="$XRAY_CORE_PACKAGE package detected"
-  LUCI_APP_XRAY_PACKAGE_DETECTED="$LUCI_APP_XRAY_PACKAGE package detected which is incompatible. Remove it: opkg remove $LUCI_APP_XRAY_PACKAGE --force-removal-of-dependent-packages"
+  LUCI_APP_XRAY_PACKAGE_DETECTED="$LUCI_APP_XRAY_PACKAGE package detected which is incompatible. Remove it: apk del $LUCI_APP_XRAY_PACKAGE --force-removal-of-dependent-packages"
   DNSMASQ_SERVICE_RUNNING="$DNSMASQ_PACKAGE service $RUNNING"
   DNSMASQ_SERVICE_NOT_RUNNING="$DNSMASQ_PACKAGE service $NOT_RUNNING. Check configuration: /etc/config/dhcp"
   INTERNET_IS_AVAILABLE="Internet is available"
@@ -158,13 +158,13 @@ set_language_ru() {
   UNSUPPORTED_OPENWRT="Вы используете OpenWrt $UNSUPPORTED_OPENWRT_VERSION. Этот скрипт проверки её не поддерживает."
   RAM_WARNING="У вашего роутера менее $MIN_RAM МБ ОЗУ. Рекомендуется использовать только vpn_domains set."
   CURL_INSTALLED="$CURL_PACKAGE $INSTALLED"
-  CURL_NOT_INSTALLED="$CURL_PACKAGE $NOT_INSTALLED. Установите его: opkg install $CURL_PACKAGE"
+  CURL_NOT_INSTALLED="$CURL_PACKAGE $NOT_INSTALLED. Установите его: apk add $CURL_PACKAGE"
   DNSMASQ_FULL_INSTALLED="$DNSMASQ_FULL_PACKAGE $INSTALLED"
   DNSMASQ_FULL_NOT_INSTALLED="$DNSMASQ_FULL_PACKAGE $NOT_INSTALLED"
-  DNSMASQ_FULL_DETAILS="Если вы не используете vpn_domains set, это нормально\nПроверьте версию: opkg list-installed | grep $DNSMASQ_FULL_PACKAGE\nТребуемая версия >= $DNSMASQ_FULL_REQUIRED_VERSION. Для OpenWrt 22.03 следуйте инструкции: https://t.me/itdoginfo/12"
+  DNSMASQ_FULL_DETAILS="Если вы не используете vpn_domains set, это нормально\nПроверьте версию: apk list | grep $DNSMASQ_FULL_PACKAGE\nТребуемая версия >= $DNSMASQ_FULL_REQUIRED_VERSION. Для OpenWrt 22.03 следуйте инструкции: https://t.me/itdoginfo/12"
   OPENWRT_21_DETAILS="\nВы используете OpenWrt $UNSUPPORTED_OPENWRT_VERSION. Этот скрипт её не поддерживает.\nИнструкция для OpenWrt $UNSUPPORTED_OPENWRT_VERSION: https://t.me/itdoginfo/8"
   XRAY_CORE_PACKAGE_DETECTED="Обнаружен пакет $XRAY_CORE_PACKAGE"
-  LUCI_APP_XRAY_PACKAGE_DETECTED="Обнаружен пакет $LUCI_APP_XRAY_PACKAGE, который не совместим. Удалите его: opkg remove $LUCI_APP_XRAY_PACKAGE --force-removal-of-dependent-packages"
+  LUCI_APP_XRAY_PACKAGE_DETECTED="Обнаружен пакет $LUCI_APP_XRAY_PACKAGE, который не совместим. Удалите его: apk del $LUCI_APP_XRAY_PACKAGE --force-removal-of-dependent-packages"
   DNSMASQ_SERVICE_RUNNING="Сервис $DNSMASQ_PACKAGE $RUNNING"
   DNSMASQ_SERVICE_NOT_RUNNING="Сервис $DNSMASQ_PACKAGE $NOT_RUNNING. Проверьте конфигурацию: /etc/config/dhcp"
   INTERNET_IS_AVAILABLE="Интернет доступен"
@@ -310,14 +310,14 @@ if [[ "$VERSION_ID" -ge 22 && "$RAM" -lt 150000 ]]; then
 fi
 
 # Check packages
-CURL=$(opkg list-installed | grep -c curl)
+CURL=$(apk list | grep -c curl)
 if [ $CURL -eq 2 ]; then
   checkpoint_true "$CURL_INSTALLED"
 else
   checkpoint_false "$CURL_NOT_INSTALLED"
 fi
 
-DNSMASQ=$(opkg list-installed | grep dnsmasq-full | awk -F "-" '{print $3}' | tr -d '.')
+DNSMASQ=$(apk list --installed --manifest | grep dnsmasq-full | awk -F "-" '{print $3}' | tr -d '.')
 if [ $DNSMASQ -ge 287 ]; then
   checkpoint_true "$DNSMASQ_FULL_INSTALLED"
 else
@@ -329,11 +329,11 @@ else
 fi
 
 # Chek xray package
-if opkg list-installed | grep -q xray-core; then
+if apk list | grep -q xray-core; then
   checkpoint_false "$XRAY_CORE_PACKAGE_DETECTED"
 fi
 
-if opkg list-installed | grep -q luci-app-xray; then
+if apk list | grep -q luci-app-xray; then
   checkpoint_false "$LUCI_APP_XRAY_PACKAGE_DETECTED"
 fi
 
@@ -365,7 +365,7 @@ if curl -6 -s https://ifconfig.io | egrep -q "(::)?[0-9a-fA-F]{1,4}(::?[0-9a-fA-
 fi
 
 # Tunnels
-WIREGUARD=$(opkg list-installed | grep -c wireguard-tools)
+WIREGUARD=$(apk list | grep -c wireguard-tools)
 if [ $WIREGUARD -eq 1 ]; then
   checkpoint_true "$WIREGUARD_TOOLS_INSTALLED"
   WG=true
@@ -401,7 +401,7 @@ if [ "$WG" == true ]; then
   fi
 fi
 
-if opkg list-installed | grep -q openvpn; then
+if apk list | grep -q openvpn; then
   checkpoint_true "$OPENVPN_INSTALLED"
   OVPN=true
 fi
@@ -434,7 +434,7 @@ if [ "$OVPN" == true ]; then
   fi
 fi
 
-if opkg list-installed | grep -q sing-box; then
+if apk list | grep -q sing-box; then
   checkpoint_true "$SINGBOX_INSTALLED"
 
   # Check route table
@@ -599,7 +599,7 @@ fi
 # DNS
 
 # DNSCrypt
-if opkg list-installed | grep -q dnscrypt-proxy2; then
+if apk list | grep -q dnscrypt-proxy2; then
   checkpoint_true "$DNSCRYPT_INSTALLED"
   if service dnscrypt-proxy status | grep -q 'running'; then
     checkpoint_true "$DNSCRYPT_SERVICE_RUNNING"
@@ -617,7 +617,7 @@ if opkg list-installed | grep -q dnscrypt-proxy2; then
 fi
 
 # Stubby
-if opkg list-installed | grep -q stubby; then
+if apk list | grep -q stubby; then
   checkpoint_true "$STUBBY_INSTALLED"
   if service stubby status | grep -q 'running'; then
     checkpoint_true "$STUBBY_SERVICE_RUNNING"
